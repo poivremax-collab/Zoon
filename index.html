@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f4c542"><link rel="manifest" href="./manifest.webmanifest">
+<title>ZOON — Prototype Krokokos / Zools</title>
+<style>
+:root{--bg:#07151b;--panel:#10252b;--gold:#f4c542;--green:#55b95a;--red:#df5365;--pink:#e35aa7;--muted:#a9c0c3}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#19434a,#07151b 70%);color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer;border:0}.screen{min-height:100vh;padding:22px;display:none}.screen.active{display:block}
+.logo{font-size:54px;font-weight:1000;letter-spacing:5px;text-align:center;color:#ffd83d;text-shadow:0 5px 0 #a04b20,0 10px 25px #000;margin:18px 0}
+.subtitle{text-align:center;color:#c8d9d9;margin-bottom:26px}
+.menu{max-width:700px;margin:auto;display:grid;gap:14px}.mainbtn{padding:18px;border-radius:18px;background:linear-gradient(#f8d45b,#e08d25);color:#301a08;font-weight:900;font-size:22px;box-shadow:0 7px 0 #754019}.mainbtn:active{transform:translateY(4px);box-shadow:0 3px 0 #754019}
+.back{background:#263b40;color:#fff;padding:10px 14px;border-radius:12px;margin-bottom:16px}
+.tribes{max-width:850px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
+.banner{min-height:170px;padding:20px;border-radius:18px 18px 28px 28px;background:linear-gradient(160deg,#5d3a1e,#b47731);border:3px solid #e6bf65;box-shadow:0 12px 25px #0008;text-align:center;position:relative}
+.banner:after{content:"";position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);border:14px solid transparent;border-top-color:#e6bf65}
+.banner h2{margin:10px 0 8px;font-size:25px}.banner p{color:#f9e9ba;margin:0}.k{background:linear-gradient(160deg,#183c25,#4c8d45)}.z{background:linear-gradient(160deg,#4a183e,#a94175)}
+.game{max-width:1100px;margin:auto}.topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.badge{padding:8px 12px;border-radius:999px;background:#193238;color:#d8eeee}.boardwrap{display:flex;justify-content:center}.board{display:grid;grid-template-columns:repeat(6,1fr);width:min(92vw,570px);aspect-ratio:1;border:5px solid #c89b50;background:#c89b50;gap:3px;border-radius:12px;overflow:hidden;box-shadow:0 15px 35px #0009}
+.cell{background:#e8d09a;display:flex;align-items:center;justify-content:center;position:relative;font-size:25px;color:#182426}.cell:nth-child(even){background:#dcbf7d}.cell .piece{width:72%;height:72%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;border:3px solid #fff8;box-shadow:0 3px 8px #0007}.p1{background:#2d9b58}.p2{background:#c44c5d}.selected{outline:5px solid #ffe45c;outline-offset:-5px}.target{box-shadow:inset 0 0 0 5px #67c76b}
+.panel{background:#10252bdd;border:1px solid #527077;border-radius:18px;padding:14px;margin-top:14px}.cards{display:flex;gap:9px;overflow:auto;padding-bottom:5px}.card{min-width:125px;background:#0a1518;border:2px solid #6d8588;border-radius:12px;padding:10px}.card strong{display:block}.card small{color:#9db5b7}.actions{display:flex;gap:9px;flex-wrap:wrap}.action{background:#2c4a50;color:#fff;padding:10px 13px;border-radius:10px}.action.active{background:#d99d2f;color:#251707}.log{max-height:130px;overflow:auto;color:#c7d6d7;font-size:13px}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modalbox{max-width:500px;width:100%;background:#10252b;border:2px solid #e0b64c;border-radius:20px;padding:22px}.modalbox h2{margin-top:0}
+</style>
+</head>
+<body>
+<section id="home" class="screen active">
+  <div class="logo">ZOON</div>
+  <div class="subtitle">Prototype jouable — test Krokokos & Zools</div>
+  <div class="menu">
+    <button class="mainbtn" onclick="show('tribes')">JOUER</button>
+    <button class="mainbtn" onclick="alert('Prototype : règles et statistiques seront ajoutées ensuite.')">RÈGLES</button>
+  </div>
+</section>
+
+<section id="tribes" class="screen">
+  <button class="back" onclick="show('home')">← Retour</button>
+  <div class="logo" style="font-size:38px">CHOISIS TA TRIBU</div>
+  <div class="subtitle">ZOON › Gandzoreille</div>
+  <div class="tribes">
+    <button class="banner k" onclick="startGame('Krokokos')"><h2>🐊 KROKOKOS</h2><p>Aligofis IV et sa tribu</p></button>
+    <button class="banner z" onclick="startGame('Zools')"><h2>🦁 ZOOLS</h2><p>Mama Zool et les siens</p></button>
+  </div>
+</section>
+
+<section id="game" class="screen">
+  <div class="game">
+    <button class="back" onclick="show('tribes')">← Changer de tribu</button>
+    <div class="topbar"><div><b id="tribeName"></b> <span class="badge">Gandzoreille</span></div><div class="badge">Tour <span id="turn">1</span> — <span id="player">Joueur 1</span></div></div>
+    <div class="boardwrap"><div id="board" class="board"></div></div>
+    <div class="panel">
+      <div class="actions">
+        <button class="action active" id="moveBtn" onclick="setMode('move')">Déplacer</button>
+        <button class="action" onclick="setMode('atout')">Atout</button>
+        <button class="action" onclick="resetGame()">Nouvelle partie</button>
+      </div>
+      <p id="hint">Sélectionne un de tes Zoons puis une case de destination.</p>
+    </div>
+    <div class="panel"><b>Zoons disponibles</b><div id="cards" class="cards"></div></div>
+    <div class="panel"><b>Journal</b><div id="log" class="log"></div></div>
+  </div>
+</section>
+
+<div id="modal" class="modal"><div class="modalbox"><h2 id="modalTitle">Combat</h2><p id="modalText"></p><button class="mainbtn" onclick="closeModal()">Continuer</button></div></div>
+
+<script>
+const tribes={
+ Krokokos:{
+  cards:[
+   ['Aligofis IV','Chef',3,5,2,'⭐'],['Gator','Prêtre','⭐',3,'⭐','⭐'],
+   ['Keops','Monstre',5,3,2,1],['Kefren','Monstre',3,5,1,2],
+   ['Zelite','Elite',3,4,0,1],['Zelite','Elite',3,4,0,1],['Zelite','Elite',3,4,0,1],
+   ['Groco','Soldat',3,1,1,0],['Groco','Soldat',3,1,1,0],['Groco','Soldat',3,1,1,0],['Groco','Soldat',3,1,1,0],
+   ['Boxazom','Emblème',2,2,0,0],['Krokus','Héros',5,3,2,1]
+  ],
+  atouts:[["Tiag d'Oras","Déplace un Zoon, sauf l'Emblème, d'une case adjacente. 1 fois."],["L'Ankh de Rad","Atout de tir utilisable par ton Prêtre."],["Scarab de Nub","Déplace jusqu'à deux Élites; elles ne peuvent pas être éliminées lors de ces combats. 1 fois."]]
+ },
+ Zools:{
+  cards:[
+   ['Mama Zool','Chef'],['Shaka Zool','Héros'],['Doc Booboo','Prêtre'],['Alfa','Monstre'],['Beta','Monstre'],
+   ['Froggydoo','Soldat'],['Froggydoo','Soldat'],['Froggydoo','Soldat'],['Froggydoo','Soldat'],['Froggydoo','Soldat'],['Froggydoo','Soldat'],['Miss Frogly','Emblème']
+  ],
+  atouts:[['Spô Drô','Atout tactique'],['Sagamax','Atout de tir'],["Pood' de bave",'Atout de protection']],
+  bonus:['Tam-Tam']
+ }
+};
+
+let state={tribe:null,turn:1,selected:null,mode:'move',board:[]};
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function startGame(t){state.tribe=t;resetGame();show('game')}
+function resetGame(){
+ state.turn=1;state.selected=null;state.mode='move';
+ state.board=Array(36).fill(null);
+ const c=tribes[state.tribe].cards;
+ // Départ de démonstration: 6 cartes du joueur 1 en bas, 6 cartes adverses en haut.
+ const idx=[30,31,32,33,34,35,0,1,2,3,4,5];
+ idx.forEach((pos,i)=>{state.board[pos]={name:c[i%c.length][0],type:c[i%c.length][1],owner:i<6?1:2,stats:c[i%c.length].slice(2)}})
+ render();log('Nouvelle partie '+state.tribe+' — mode prototype.')}
+function setMode(m){state.mode=m;document.querySelectorAll('.action').forEach(x=>x.classList.remove('active'));if(m==='move')document.getElementById('moveBtn').classList.add('active');document.getElementById('hint').textContent=m==='move'?'Sélectionne un de tes Zoons puis une case de destination.':'Les Atouts seront activés ici dans la prochaine étape.'}
+function render(){
+ document.getElementById('tribeName').textContent=state.tribe;
+ document.getElementById('turn').textContent=state.turn;
+ const b=document.getElementById('board');b.innerHTML='';
+ state.board.forEach((p,i)=>{const cell=document.createElement('button');cell.className='cell';cell.onclick=()=>clickCell(i);if(state.selected===i)cell.classList.add('selected');
+ if(p){const q=document.createElement('div');q.className='piece '+(p.owner===1?'p1':'p2');q.textContent=p.name.slice(0,3);cell.appendChild(q)}
+ b.appendChild(cell)});
+ const cards=document.getElementById('cards');cards.innerHTML='';
+ tribes[state.tribe].cards.forEach((c,i)=>{const d=document.createElement('div');d.className='card';d.innerHTML='<strong>'+c[0]+'</strong><small>'+c[1]+'</small>';cards.appendChild(d)});
+ if(tribes[state.tribe].bonus){const d=document.createElement('div');d.className='card';d.innerHTML='<strong>'+tribes[state.tribe].bonus[0]+'</strong><small>Bonus extension</small>';cards.appendChild(d)}
+ tribes[state.tribe].atouts.forEach(c=>{const d=document.createElement('div');d.className='card';d.innerHTML='<strong>'+c[0]+'</strong><small>Atout</small>';cards.appendChild(d)})
+}
+function clickCell(i){
+ if(state.mode!=='move')return;
+ const p=state.board[i];
+ if(state.selected===null){if(p&&p.owner===1){state.selected=i;log('Sélection : '+p.name)}}
+ else if(i===state.selected){state.selected=null}
+ else if(p&&p.owner===1){state.selected=i;log('Sélection : '+p.name)}
+ else {move(state.selected,i)}
+ render()
+}
+function move(from,to){
+ const p=state.board[from];if(!p)return;
+ const fr=[Math.floor(from/6),from%6], tr=[Math.floor(to/6),to%6];
+ const dr=Math.abs(fr[0]-tr[0]),dc=Math.abs(fr[1]-tr[1]);
+ if(dr>1||dc>1){log('Prototype : déplacement limité à une case adjacente pour ce test.');return}
+ const target=state.board[to];
+ if(target&&target.owner!==p.owner){combat(p,target,to);return}
+ if(target){log('Case occupée.');return}
+ state.board[to]=p;state.board[from]=null;state.selected=null;state.turn++;log(p.name+' se déplace.')}
+function combat(a,d,pos){
+ const aw=roll(a),dw=roll(d);
+ document.getElementById('modalTitle').textContent='⚔️ Combat';
+ document.getElementById('modalText').textContent=a.name+' ('+aw+') contre '+d.name+' ('+dw+'). '+(aw>dw?'Le défenseur est éliminé.':aw<dw?'L’attaquant est éliminé.':'Égalité : le défenseur reste en place.');
+ document.getElementById('modal').classList.add('open');
+ if(aw>dw)state.board[pos]=a;
+ else if(aw<dw)state.board[pos]=d;
+ state.board[state.selected]=null;state.selected=null;state.turn++;render()}
+function roll(p){const s=p.stats||[];const nums=s.filter(x=>typeof x==='number');return nums.length?nums[Math.floor(Math.random()*nums.length)] : Math.floor(Math.random()*6)+1}
+function closeModal(){document.getElementById('modal').classList.remove('open');render()}
+function log(t){const el=document.getElementById('log');el.innerHTML='<div>• '+t+'</div>'+el.innerHTML}
+</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script></body></html>

@@ -1,0 +1,10 @@
+{
+  "name": "ZOON — Krokokos & Zools",
+  "short_name": "ZOON",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#07151b",
+  "theme_color": "#f4c542",
+  "lang": "fr-FR",
+  "orientation": "portrait-primary"
+}
